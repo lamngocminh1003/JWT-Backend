@@ -1,4 +1,10 @@
-import { createNewUser, getUserList, deleteUser } from "../service/userService";
+import {
+  createNewUser,
+  getUserList,
+  deleteUser,
+  handleGetUserByIdService,
+  handleUpdateUserService,
+} from "../service/userService";
 const handleHome = (req, res) => {
   return res.render("home");
 };
@@ -15,9 +21,23 @@ const handleDeleteUser = async (req, res) => {
   console.log("req.params.id", req.params.id);
   return res.redirect("/user");
 };
+const handleEditUser = async (req, res) => {
+  let data = await handleGetUserByIdService(req.params);
+  let dataUser = {};
+  if (data && data.length > 0) {
+    dataUser = data[0];
+  }
+  return res.render("update-user", { dataUser: dataUser });
+};
+const handleUpdateUser = async (req, res) => {
+  await handleUpdateUserService(req.body);
+  return res.redirect("/user");
+};
 module.exports = {
   handleHome,
   handleUserPage,
   handleCreateUser,
   handleDeleteUser,
+  handleEditUser,
+  handleUpdateUser,
 };
