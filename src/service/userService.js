@@ -3,33 +3,23 @@ import bcrypt from "bcryptjs";
 import mysql from "mysql2/promise";
 // get the promise implementation, we will use bluebird
 import bluebird from "bluebird";
-
+import db from "../models/index";
 const salt = bcrypt.genSaltSync(10);
 const hashPassword = (password) => {
   let hashPassword = bcrypt.hashSync(password, salt);
   return hashPassword;
 };
 const createNewUser = async (data) => {
-  // create the connection to database
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt-db",
-    port: "3307",
-    password: "123456",
-    Promise: bluebird,
-  });
   let { email, userName, password } = data;
   let hashPasswordUser = hashPassword(password);
   try {
-    const [rows, fields] = await connection.execute(
-      `INSERT INTO users (email, password, userName)
-    VALUES (?, ?, ?)`,
-      [email, hashPasswordUser, userName]
-    );
-    return rows;
+    await db.user.create({
+      email: email,
+      password: hashPasswordUser,
+      userName: userName,
+    });
   } catch (error) {
-    console.log("check error");
+    console.log("check error", error);
   }
 };
 const getUserList = async () => {
@@ -44,10 +34,10 @@ const getUserList = async () => {
   });
   let user = [];
   try {
-    const [rows, fields] = await connection.execute("SELECT * FROM `users`");
+    const [rows, fields] = await connection.execute("SELECT * FROM `user`");
     return rows;
   } catch (error) {
-    console.log("check error");
+    console.log("check error", error);
   }
 };
 const deleteUser = async (userId) => {
@@ -63,7 +53,7 @@ const deleteUser = async (userId) => {
   });
   try {
     const [rows, fields] = await connection.execute(
-      `DELETE FROM users WHERE id=?`,
+      `DELETE FROM user WHERE id=?`,
       [id]
     );
     return rows;
@@ -84,7 +74,7 @@ const handleGetUserByIdService = async (userId) => {
   });
   try {
     const [rows, fields] = await connection.execute(
-      `SELECT * FROM users WHERE id=?`,
+      `SELECT * FROM user WHERE id=?`,
       [id]
     );
     return rows;
@@ -105,14 +95,14 @@ const handleUpdateUserService = async (data) => {
   let { id, email, userName } = data;
   try {
     const [rows, fields] = await connection.execute(
-      `UPDATE users
+      `UPDATE user
       SET email = ?, userName= ?
       WHERE id = ?;`,
       [email, userName, id]
     );
     return rows;
   } catch (error) {
-    console.log("check error");
+    console.log("check error", error);
   }
 };
 module.exports = {
