@@ -23,11 +23,10 @@ const handleDeleteUser = async (req, res) => {
 };
 const handleEditUser = async (req, res) => {
   let data = await handleGetUserByIdService(req.params);
-  let dataUser = {};
-  if (data && data.length > 0) {
-    dataUser = data[0];
-  }
-  return res.render("update-user", { dataUser: dataUser });
+  // if (data && data.length > 0) {
+  //   dataUser = data[0];
+  // }
+  return res.render("update-user", { dataUser: data });
 };
 const handleUpdateUser = async (req, res) => {
   await handleUpdateUserService(req.body);

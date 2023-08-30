@@ -23,87 +23,36 @@ const createNewUser = async (data) => {
   }
 };
 const getUserList = async () => {
-  // create the connection to database
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt-db",
-    port: "3307",
-    password: "123456",
-    Promise: bluebird,
-  });
   let user = [];
-  try {
-    const [rows, fields] = await connection.execute("SELECT * FROM `user`");
-    return rows;
-  } catch (error) {
-    console.log("check error", error);
-  }
+  user = await db.user.findAll();
+  return user;
 };
 const deleteUser = async (userId) => {
-  // create the connection to database
   let { id } = userId;
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt-db",
-    port: "3307",
-    password: "123456",
-    Promise: bluebird,
+  await db.user.destroy({
+    where: { id: id },
   });
-  try {
-    const [rows, fields] = await connection.execute(
-      `DELETE FROM user WHERE id=?`,
-      [id]
-    );
-    return rows;
-  } catch (error) {
-    console.log("check error", error);
-  }
 };
 const handleGetUserByIdService = async (userId) => {
-  // create the connection to database
   let { id } = userId;
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt-db",
-    port: "3307",
-    password: "123456",
-    Promise: bluebird,
+  let user = await db.user.findOne({
+    where: { id: id },
   });
-  try {
-    const [rows, fields] = await connection.execute(
-      `SELECT * FROM user WHERE id=?`,
-      [id]
-    );
-    return rows;
-  } catch (error) {
-    console.log("check error", error);
-  }
+  return user;
 };
 const handleUpdateUserService = async (data) => {
-  // create the connection to database
-  const connection = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    database: "jwt-db",
-    port: "3307",
-    password: "123456",
-    Promise: bluebird,
-  });
   let { id, email, userName } = data;
-  try {
-    const [rows, fields] = await connection.execute(
-      `UPDATE user
-      SET email = ?, userName= ?
-      WHERE id = ?;`,
-      [email, userName, id]
-    );
-    return rows;
-  } catch (error) {
-    console.log("check error", error);
-  }
+  await db.user.update(
+    {
+      email: email,
+      userName: userName,
+    },
+    {
+      where: {
+        id: id,
+      },
+    }
+  );
 };
 module.exports = {
   createNewUser,

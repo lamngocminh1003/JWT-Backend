@@ -13,9 +13,9 @@ const sequelize = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
   port: DB_PORT,
   timezone: "+07:00",
   logging: false,
-  query: {
-    raw: true,
-  },
+  // query: {
+  //   raw: true,
+  // },
   define: {
     timestamps: true,
     freezeTableName: true,

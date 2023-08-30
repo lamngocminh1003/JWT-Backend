@@ -20,7 +20,7 @@ const customizeConfig = {
   port: DB_PORT,
   dialect: DB_DIALECT,
   logging: false,
-  query: { raw: true },
+  // query: { raw: true },
   timezone: "+07:00",
   define: {
     timestamps: true,
