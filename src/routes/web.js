@@ -7,7 +7,7 @@ import {
   handleEditUser,
   handleUpdateUser,
 } from "../controllers/homeController";
-
+import { testAPI } from "../controllers/apiController";
 const router = express.Router();
 const initWebRoutes = (app) => {
   router.get("/", handleHome);
@@ -16,6 +16,8 @@ const initWebRoutes = (app) => {
   router.post("/user/delete-user/:id", handleDeleteUser);
   router.get("/user/edit-user/:id", handleEditUser);
   router.post("/user/update-user", handleUpdateUser);
+
+  router.get("/testAPI", testAPI);
 
   return app.use("/", router);
 };

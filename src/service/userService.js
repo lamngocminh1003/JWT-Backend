@@ -23,6 +23,23 @@ const createNewUser = async (data) => {
   }
 };
 const getUserList = async () => {
+  //test relationships
+
+  const users = await db.user.findAll({
+    attributes: ["id", "userName", "email"],
+    include: { model: db.group, attributes: ["id", "name", "des"] },
+    raw: "true",
+    nest: true,
+  });
+  const role = await db.role.findAll({
+    include: { model: db.group, attributes: ["id", "name", "des"] },
+    attributes: ["id", "url", "des"],
+    raw: "true",
+    nest: true,
+  });
+  console.log("users", users);
+  console.log("role", role);
+
   let user = [];
   user = await db.user.findAll();
   return user;
