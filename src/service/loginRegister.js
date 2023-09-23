@@ -73,6 +73,58 @@ const registerService = async (data) => {
     };
   }
 };
+const checkPassword = (inputPassword, hashPassword) => {
+  return bcrypt.compareSync(inputPassword, hashPassword);
+};
+const loginService = async (data) => {
+  try {
+    let { email, password } = data;
+    // check email are exist
+    let isEmailExist = await checkEmailUser(email);
+    if (isEmailExist === false) {
+      return {
+        EM: "The email or password isn't exist",
+        EC: 1,
+        DT: "",
+      };
+    }
+    let userLogin = await db.user.findOne({
+      where: { email: email },
+    });
+    if (userLogin) {
+      let checkPasswordLogin = checkPassword(password, userLogin.password);
+      if (checkPasswordLogin === true) {
+        return {
+          EM: "ok",
+          EC: 2,
+          DT: "",
+        };
+      }
+      if (checkPasswordLogin === false) {
+        return {
+          EM: "The email or password isn't correct",
+          EC: 1,
+          DT: "",
+        };
+      }
+    } else {
+      console.log("Not found email", userLogin.email);
+      return {
+        EM: "The email or password isn't correct",
+        EC: 1,
+        DT: "",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      EM: "Something wrong from service",
+      EC: -2,
+      DT: "",
+    };
+  }
+};
 module.exports = {
   registerService,
+  loginService,
 };

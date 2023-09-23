@@ -18,7 +18,6 @@ const handleCreateUser = (req, res) => {
 };
 const handleDeleteUser = async (req, res) => {
   await deleteUser(req.params);
-  console.log("req.params.id", req.params.id);
   return res.redirect("/user");
 };
 const handleEditUser = async (req, res) => {

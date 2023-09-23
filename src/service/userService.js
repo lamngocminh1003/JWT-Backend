@@ -1,8 +1,4 @@
 import bcrypt from "bcryptjs";
-// get the client
-import mysql from "mysql2/promise";
-// get the promise implementation, we will use bluebird
-import bluebird from "bluebird";
 import db from "../models/index";
 const salt = bcrypt.genSaltSync(10);
 const hashPassword = (password) => {
@@ -55,6 +51,7 @@ const handleGetUserByIdService = async (userId) => {
   let user = await db.user.findOne({
     where: { id: id },
   });
+  
   return user;
 };
 const handleUpdateUserService = async (data) => {
